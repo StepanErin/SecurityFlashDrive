@@ -13,5 +13,20 @@ namespace SecurityFlashDrive
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }
+        /*
+        static public DiologForm diologForm = new DiologForm();
+        
+        static public void TTT()
+        {
+            Action action = () =>
+            {
+                diologForm.Show();
+                diologForm.T();
+            };
+            if (diologForm.InvokeRequired)
+                diologForm.Invoke(action);
+            else
+                action();
+        }*/
     }
 }
