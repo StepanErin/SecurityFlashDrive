@@ -10,6 +10,7 @@ namespace SecurityFlashDrive
     public partial class Form1 : Form
     {
         private DiologForm diologForm = new DiologForm();
+        ParamDataForm paramDataForm = new ParamDataForm();
 
         #region TreatmentThisForm
         public Form1()
@@ -19,11 +20,56 @@ namespace SecurityFlashDrive
             UpdateData();
             label2.Text = "Работа в фоне: ИНЕРТНО";
             label2.ForeColor = Color.DarkRed;
+            FirstSTart();
+            Program.DDD_E_T += Program_DDD_E_T;
             //diologForm = new DiologForm(this);
         }
+
+        private void Program_DDD_E_T(object? sender, EventArgs e)
+        {
+            MessageBox.Show("NNN");
+        }
+
         private void Form1_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (tracking != null) tracking.Stop();
+            CreateNewFile();
+        }
+        private void FirstSTart()
+        {
+            var data = (false, "", new byte[] { });
+            if (File.Exists("Data.date"))
+            {
+                data = FileIO.Read("Data.date");
+                if (data.Item1)
+                {
+                    var t = Serialization.StartDeserialize<ParamDataForm>(data.Item3);
+                    if (t.Item1) Apply(t.Item2);
+                    else CreateNewFile();
+                }
+            }
+            else CreateNewFile();
+            void Apply(ParamDataForm param)
+            {
+                paramDataForm = param;
+                checkBox_AUTOmod.Checked = param.AutoMode;
+                if (param.AutoMode) WorkInBackground_ACT();
+
+                listBox_Devases.Items.Clear();
+                listBox_Devases.Items.AddRange(param.Devises.ToArray());
+            }
+        }
+        private void CreateNewFile()
+        {
+            var t = Serialization.StartSerialize<ParamDataForm>(paramDataForm);
+            FileIO.OpenOrCreate(t.Item2, "Data.date");
+        }
+        [Serializable]
+        private struct ParamDataForm
+        {
+            public ParamDataForm() { }
+            public bool AutoMode { get; set; } = false;
+            public List<string> Devises = new List<string>();
         }
         #endregion TreatmentForm
 
@@ -32,27 +78,13 @@ namespace SecurityFlashDrive
 
 
         #region Button
-        bool activ = false;
         private void button_StartBackground_Click(object sender, EventArgs e)
         {
-            if (!activ)
-            {
-                activ = true;
-                tracking = new DeviceTracking();
-                tracking.Start();
-                tracking.NewCurentDrive += Tracking_NewCurentDrive;
-                tracking.OffCurentDrive += Tracking_OffCurentDrive;
-                WorkInBackground_ACT();
-            }
+            WorkInBackground_ACT();
         }
         private void button_Stop_Click(object sender, EventArgs e)
         {
-            if (activ)
-            {
-                activ = false;
-                if (tracking != null) tracking.Stop();
-                WorkInBackground_PASS();
-            }
+            WorkInBackground_PASS();
         }
         private void button_TEST_Click(object sender, EventArgs e)
         {
@@ -85,36 +117,8 @@ namespace SecurityFlashDrive
         private void button_SelectionConfirmation_Click(object sender, EventArgs e)
         {
             var passWord = "0";
-            //ActionsDataFile2 file = new ActionsDataFile2(curentDeviceName, "PrivateData", "Log", "txt", passWord);
             ActionsDataFile file = new ActionsDataFile(curentDeviceName, "PrivateData", "Log", "txt", passWord);
-
             diologForm.ShowFormCurrentData(file);
-
-            /*
-            diologForm.ShowForm(curentDeviceName);
-            
-            //Data2 data = new Data2(input);
-            if (file.FileExists())
-            {
-                file.DownloadData();
-                MessageBox.Show($"Data: |{file.Data}|");
-
-                file.UpdateCipher();
-                FileIO.VisualHiding.PrivatizeFile(file.Path);
-                FileIO.VisualHiding.PrivatizeFileDirectory(file.Path);
-            }
-            else
-            {
-                var putput = MessageBox.Show("Перезаписать файл(y/n)", "Подтверждение", MessageBoxButtons.YesNo);
-                if (putput == DialogResult.Yes)
-                {
-                    file.SaveData("123");
-                    FileIO.VisualHiding.PrivatizeFile(file.Path);
-                    FileIO.VisualHiding.PrivatizeFileDirectory(file.Path);
-                }
-                else
-                    MessageBox.Show("Отмена");
-            }*/
         }
         #endregion Button
 
@@ -122,13 +126,19 @@ namespace SecurityFlashDrive
         private void comboBox_DiskSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
             curentDeviceName = deviceData.GetNameByIndex(comboBox_DiskSelection.SelectedIndex);
-            button_SelectionConfirmation.Text = $"Выбранный диск: {curentDeviceName}";
+            button_SelectionConfirmation.Text = $"Настроить устройство: {curentDeviceName}";
         }
         #endregion ComboBox
 
 
         #endregion ControlThisForm
 
+        private void RunFile(ActionsDataFile file)
+        {
+            file.DownloadData();
+            var data = file.DataFormat;
+            MessageBox.Show(data.DataSTR);
+        }
 
         #region WorkCodThisForm
         private DeviceTracking tracking;
@@ -203,21 +213,46 @@ namespace SecurityFlashDrive
             if (InvokeRequired) Invoke(action);
             else action();
         }
+        bool activ = false;
         private void WorkInBackground_PASS()
         {
-            label2.Text = "Работа в фоне: ИНЕРТНО";
-            label2.ForeColor = Color.DarkRed;
+            if (activ)
+            {
+                activ = false;
+                if (tracking != null) tracking.Stop();
+
+                label2.Text = "Работа в фоне: ИНЕРТНО";
+                label2.ForeColor = Color.DarkRed;
+            }
         }
         private void WorkInBackground_ACT()
         {
-            label2.Text = "Работа в фоне: АКТИВНО";
-            label2.ForeColor = Color.DarkGreen;
+            if (!activ)
+            {
+                activ = true;
+                tracking = new DeviceTracking();
+                tracking.Start();
+                tracking.NewCurentDrive += Tracking_NewCurentDrive;
+                tracking.OffCurentDrive += Tracking_OffCurentDrive;
+
+                label2.Text = "Работа в фоне: АКТИВНО";
+                label2.ForeColor = Color.DarkGreen;
+            }
         }
         private void Tracking_NewCurentDrive(char nameDisk, string volumeLabel)
         {
             UpdateData();
-            var res = MessageBox.Show($"Выбрать устройство: {deviceData.GetDataDevices(nameDisk)}", "Новое устройство", MessageBoxButtons.YesNo);
-            if (res == DialogResult.Yes) SelectedDisk(deviceData.GetIndexDevices(nameDisk));
+            if (paramDataForm.Devises.Contains(deviceData.GetDataDevices(nameDisk)))
+            {
+                var passWord = "0";
+                ActionsDataFile file = new ActionsDataFile(nameDisk, "PrivateData", "Log", "txt", passWord);
+                RunFile(file);
+            }
+            else
+            {
+                var res = MessageBox.Show($"Выбрать устройство: {deviceData.GetDataDevices(nameDisk)}", "Новое устройство", MessageBoxButtons.YesNo);
+                if (res == DialogResult.Yes) SelectedDisk(deviceData.GetIndexDevices(nameDisk));
+            }
         }
         private void Tracking_OffCurentDrive(char nameDisk, string volumeLabel)
         {
@@ -225,5 +260,50 @@ namespace SecurityFlashDrive
             UpdateData();
         }
         #endregion WorkCodThisForm
+
+        private void checkBox_AUTOmod_CheckedChanged(object sender, EventArgs e)
+        {
+            paramDataForm.AutoMode = checkBox_AUTOmod.Checked;
+        }
+
+        private void button_Run_Click(object sender, EventArgs e)
+        {
+            var passWord = "0";
+            ActionsDataFile file = new ActionsDataFile(curentDeviceName, "PrivateData", "Log", "txt", passWord);
+            RunFile(file);
+        }
+        private void button_Add_Click(object sender, EventArgs e)
+        {
+            string name = deviceData.GetDataDevices(curentDeviceName);
+            if (!listBox_Devases.Items.Contains(name))
+            {
+                paramDataForm.Devises.Add(name);
+                listBox_Devases.Items.Add(name);
+            }
+        }
+
+        private void button_Del_Click(object sender, EventArgs e)
+        {
+            if (listBox_Devases.SelectedItem == null) return;
+            string name = listBox_Devases.SelectedItem.ToString();
+            if (paramDataForm.Devises.Contains(name))
+            {
+                paramDataForm.Devises.Remove(name);
+                listBox_Devases.Items.Remove(name);
+            }
+        }
+
+        private void button_Sliv_Click(object sender, EventArgs e)
+        {
+            /*
+             
+   if (this.WindowState == FormWindowState.Minimized) 
+   { 
+      this.ShowInTaskbar = false; 
+      notifyIcon1.Visible = true; 
+   } 
+             */
+            this.WindowState = FormWindowState.Minimized;
+        }
     }
 }

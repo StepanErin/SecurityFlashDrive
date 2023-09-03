@@ -12,38 +12,8 @@ namespace SecurityFlashDrive
     /// </summary>
     public class DataFile
     {
-        /// <summary>
-        /// File for serialization
-        /// </summary>
-        [Serializable]
-        public struct FileFormat
-        {
-            public FileFormat(string dataSTR)
-            {
-                DataSTR = dataSTR;
-            }
-            public string DataSTR { get; set; }
-        }
-        public FileFormat DataFormat { get; private protected set; }
-        public byte[] DataBytes
-        {
-            get
-            {
-                return Serialization.StartSerialize<FileFormat>(DataFormat).Item2;
-            }
-            private protected set
-            {
-                DataFormat = Serialization.StartDeserialize<FileFormat>(value).Item2;
-            }
-        }
-
-
         public DataPath Path { get; }
 
-        #region DataForCrypto
-        public string PassWord { get; }
-        public byte[] EncryptedFile { get; private protected set; } = null;
-        #endregion DataForCrypto
 
         /// <summary>
         /// Создать данные файла
@@ -57,5 +27,29 @@ namespace SecurityFlashDrive
             Path = dataPath;
             PassWord = passWord;
         }
+
+
+
+        #region DataForCrypto
+        public string PassWord { get; }
+        public byte[] EncryptedFile { get; private protected set; } = null;
+        #endregion DataForCrypto
+
+
+
+        #region Serialization
+        public FormatData DataFormat { get; private protected set; } = new FormatData();
+        public byte[] DataBytes
+        {
+            get
+            {
+                return Serialization.StartSerialize<FormatData>(DataFormat).Item2;
+            }
+            private protected set
+            {
+                DataFormat = Serialization.StartDeserialize<FormatData>(value).Item2;
+            }
+        }
+        #endregion Serialization
     }
 }

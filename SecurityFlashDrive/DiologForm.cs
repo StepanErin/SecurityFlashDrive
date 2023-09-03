@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SecurityFlashDrive.Safety_2;
+//using static SecurityFlashDrive.Safety_2;
 
 namespace SecurityFlashDrive
 {
