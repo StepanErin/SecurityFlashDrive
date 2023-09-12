@@ -89,10 +89,17 @@ namespace SecurityFlashDrive
         private (char, string)[] ConnectedDevices_OLD;
         private (char, string)[] UpdateConnectedDevices()
         {
-            var temp = new List<(char, string)>();
-            foreach (var item in DriveInfo.GetDrives()) temp.Add((item.Name[0], item.VolumeLabel));
-            ConnectedDevices_OLD = temp.ToArray();
-            return ConnectedDevices_OLD;
+            try
+            {
+                var temp = new List<(char, string)>();
+                foreach (var item in DriveInfo.GetDrives()) temp.Add((item.Name[0], item.VolumeLabel));
+                ConnectedDevices_OLD = temp.ToArray();
+                return ConnectedDevices_OLD;
+            }
+            catch (Exception ex)
+            {
+                return new(char, string)[] { ('-', ex.Message) };
+            }
         }
     }
 }

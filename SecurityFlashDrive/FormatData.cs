@@ -29,7 +29,7 @@ namespace SecurityFlashDrive
         [Serializable]
         public struct FilesData
         {
-            public FilesData(DataPath pathFromFile) { }
+            public FilesData(DataPath pathFromFile, DataPath pathInFile) { PathFromFile = pathFromFile; PathInFile = pathInFile; }
             public DataPath PathFromFile { get; set; } = new DataPath();
             public DataPath PathInFile { get; set; } = new DataPath();
             public override string ToString()

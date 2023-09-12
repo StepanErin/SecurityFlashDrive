@@ -9,8 +9,13 @@ namespace SecurityFlashDrive
 {
     public partial class Form1 : Form
     {
-        private DiologForm diologForm = new DiologForm();
-        ParamDataForm paramDataForm = new ParamDataForm();
+        #region Global data
+        private IconTreyControl iconTreyControl;
+        private event IconTreyControl.ClickButton ClickB;
+        private EditFile_Form editFile_Form = new EditFile_Form();
+        private Form3 editFile_Form2 = new Form3();
+        private Backup backup = new Backup();
+        #endregion Global data
 
         #region TreatmentThisForm
         public Form1()
@@ -18,22 +23,24 @@ namespace SecurityFlashDrive
             InitializeComponent();
             FormClosing += Form1_FormClosing;
             UpdateData();
-            label2.Text = "Работа в фоне: ИНЕРТНО";
-            label2.ForeColor = Color.DarkRed;
+            WorkInBackground_PASS();
             FirstSTart();
-            Program.DDD_E_T += Program_DDD_E_T;
-            //diologForm = new DiologForm(this);
-        }
 
-        private void Program_DDD_E_T(object? sender, EventArgs e)
-        {
-            MessageBox.Show("NNN");
+
+            ClickB += Click_Tray;
+            var t = new IconTreyControl.TypeEvent[]
+            {
+                IconTreyControl.TypeEvent.Show,
+                IconTreyControl.TypeEvent.Close
+            };
+            iconTreyControl = new IconTreyControl(ClickB, t);
         }
 
         private void Form1_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (tracking != null) tracking.Stop();
             CreateNewFile();
+            iconTreyControl.Visual_OFF();
         }
         private void FirstSTart()
         {
@@ -59,20 +66,7 @@ namespace SecurityFlashDrive
                 listBox_Devases.Items.AddRange(param.Devises.ToArray());
             }
         }
-        private void CreateNewFile()
-        {
-            var t = Serialization.StartSerialize<ParamDataForm>(paramDataForm);
-            FileIO.OpenOrCreate(t.Item2, "Data.date");
-        }
-        [Serializable]
-        private struct ParamDataForm
-        {
-            public ParamDataForm() { }
-            public bool AutoMode { get; set; } = false;
-            public List<string> Devises = new List<string>();
-        }
         #endregion TreatmentForm
-
 
         #region ControlThisForm
 
@@ -118,7 +112,39 @@ namespace SecurityFlashDrive
         {
             var passWord = "0";
             ActionsDataFile file = new ActionsDataFile(curentDeviceName, "PrivateData", "Log", "txt", passWord);
-            diologForm.ShowFormCurrentData(file);
+            editFile_Form.ShowFormCurrentData(file);
+            editFile_Form2.ShowFormCurrentData(file);
+        }
+        private void button_Run_Click(object sender, EventArgs e)
+        {
+            var passWord = "0";
+            ActionsDataFile file = new ActionsDataFile(curentDeviceName, "PrivateData", "Log", "txt", passWord);
+            backup.RunFile(file);
+        }
+        private void button_Add_Click(object sender, EventArgs e)
+        {
+            string name = deviceData.GetDataDevices(curentDeviceName);
+            if (!listBox_Devases.Items.Contains(name))
+            {
+                paramDataForm.Devises.Add(name);
+                listBox_Devases.Items.Add(name);
+            }
+        }
+        private void button_Del_Click(object sender, EventArgs e)
+        {
+            if (listBox_Devases.SelectedItem == null) return;
+            string name = listBox_Devases.SelectedItem.ToString();
+            if (paramDataForm.Devises.Contains(name))
+            {
+                paramDataForm.Devises.Remove(name);
+                listBox_Devases.Items.Remove(name);
+            }
+        }
+        private void button_Sliv_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+            ShowIcon = false;
+            ShowInTaskbar = false;
         }
         #endregion Button
 
@@ -130,21 +156,54 @@ namespace SecurityFlashDrive
         }
         #endregion ComboBox
 
+        #region CheckBox
+        private void checkBox_AUTOmod_CheckedChanged(object sender, EventArgs e)
+        {
+            paramDataForm.AutoMode = checkBox_AUTOmod.Checked;
+        }
+        #endregion CheckBox
+
+        #region TrayByThisForm
+        private void Click_Tray(IconTreyControl.TypeEvent typeEvent)
+        {
+            switch (typeEvent)
+            {
+                case IconTreyControl.TypeEvent.Show:
+                    this.WindowState = FormWindowState.Normal;
+                    ShowIcon = true;
+                    ShowInTaskbar = true;
+                    Show();
+                    break;
+                case IconTreyControl.TypeEvent.Close:
+                    Application.Exit();
+                    break;
+            }
+        }
+        #endregion TrayByThisForm
 
         #endregion ControlThisForm
 
-        private void RunFile(ActionsDataFile file)
-        {
-            file.DownloadData();
-            var data = file.DataFormat;
-            MessageBox.Show(data.DataSTR);
-        }
-
         #region WorkCodThisForm
+
+        #region Data
+        bool activ_InBackground = false;
+
         private DeviceTracking tracking;
         private DevicesData deviceData = new DevicesData();
         private char curentDeviceName;
+
+
+
+        private ParamDataForm paramDataForm = new ParamDataForm();
+        [Serializable]
+        private struct ParamDataForm
+        {
+            public ParamDataForm() { }
+            public bool AutoMode { get; set; } = false;
+            public List<string> Devises = new List<string>();
+        }
         //private DiologForm diologForm;
+        #endregion Data
 
         /// <summary>
         /// Подключённые устройства
@@ -213,23 +272,11 @@ namespace SecurityFlashDrive
             if (InvokeRequired) Invoke(action);
             else action();
         }
-        bool activ = false;
-        private void WorkInBackground_PASS()
-        {
-            if (activ)
-            {
-                activ = false;
-                if (tracking != null) tracking.Stop();
-
-                label2.Text = "Работа в фоне: ИНЕРТНО";
-                label2.ForeColor = Color.DarkRed;
-            }
-        }
         private void WorkInBackground_ACT()
         {
-            if (!activ)
+            if (!activ_InBackground)
             {
-                activ = true;
+                activ_InBackground = true;
                 tracking = new DeviceTracking();
                 tracking.Start();
                 tracking.NewCurentDrive += Tracking_NewCurentDrive;
@@ -239,6 +286,17 @@ namespace SecurityFlashDrive
                 label2.ForeColor = Color.DarkGreen;
             }
         }
+        private void WorkInBackground_PASS()
+        {
+            if (activ_InBackground)
+            {
+                activ_InBackground = false;
+                if (tracking != null) tracking.Stop();
+
+                label2.Text = "Работа в фоне: ИНЕРТНО";
+                label2.ForeColor = Color.DarkRed;
+            }
+        }
         private void Tracking_NewCurentDrive(char nameDisk, string volumeLabel)
         {
             UpdateData();
@@ -246,7 +304,7 @@ namespace SecurityFlashDrive
             {
                 var passWord = "0";
                 ActionsDataFile file = new ActionsDataFile(nameDisk, "PrivateData", "Log", "txt", passWord);
-                RunFile(file);
+                backup.RunFile(file);
             }
             else
             {
@@ -259,51 +317,11 @@ namespace SecurityFlashDrive
             MessageBox.Show($"Устройство [{volumeLabel}] - {nameDisk} отключено");
             UpdateData();
         }
+        private void CreateNewFile()
+        {
+            var t = Serialization.StartSerialize<ParamDataForm>(paramDataForm);
+            FileIO.OpenOrCreate(t.Item2, "Data.date");
+        }
         #endregion WorkCodThisForm
-
-        private void checkBox_AUTOmod_CheckedChanged(object sender, EventArgs e)
-        {
-            paramDataForm.AutoMode = checkBox_AUTOmod.Checked;
-        }
-
-        private void button_Run_Click(object sender, EventArgs e)
-        {
-            var passWord = "0";
-            ActionsDataFile file = new ActionsDataFile(curentDeviceName, "PrivateData", "Log", "txt", passWord);
-            RunFile(file);
-        }
-        private void button_Add_Click(object sender, EventArgs e)
-        {
-            string name = deviceData.GetDataDevices(curentDeviceName);
-            if (!listBox_Devases.Items.Contains(name))
-            {
-                paramDataForm.Devises.Add(name);
-                listBox_Devases.Items.Add(name);
-            }
-        }
-
-        private void button_Del_Click(object sender, EventArgs e)
-        {
-            if (listBox_Devases.SelectedItem == null) return;
-            string name = listBox_Devases.SelectedItem.ToString();
-            if (paramDataForm.Devises.Contains(name))
-            {
-                paramDataForm.Devises.Remove(name);
-                listBox_Devases.Items.Remove(name);
-            }
-        }
-
-        private void button_Sliv_Click(object sender, EventArgs e)
-        {
-            /*
-             
-   if (this.WindowState == FormWindowState.Minimized) 
-   { 
-      this.ShowInTaskbar = false; 
-      notifyIcon1.Visible = true; 
-   } 
-             */
-            this.WindowState = FormWindowState.Minimized;
-        }
     }
 }

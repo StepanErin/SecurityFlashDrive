@@ -13,11 +13,11 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SecurityFlashDrive
 {
-    public partial class DiologForm : Form
+    public partial class EditFile_Form : Form
     {
         private char disk = '\0';
         #region TreatmentThisForm
-        public DiologForm()
+        public EditFile_Form()
         {
             InitializeComponent();
             FormClosing += DiologForm_FormClosing;
@@ -88,6 +88,8 @@ namespace SecurityFlashDrive
             listBox_Files_UpdateData();
         }
         #endregion Button
+
+
         #endregion ControlThisForm
 
 
@@ -101,7 +103,7 @@ namespace SecurityFlashDrive
             {
                 AutoSave = checkBox_AutoSave.Checked,
                 AutoBackupSave = checkBox_AutoBackupSave.Checked,
-                FolderInStartOrEnd = radioButton_Start.Checked,
+                FolderInStartOrEnd = radioButton_Common.Checked,
                 NameFolder = textBox_NameFolder.Text,
             };
 
@@ -113,7 +115,6 @@ namespace SecurityFlashDrive
                 DataSTR = richTextBox_Data.Text,
                 Parametrs = parametrsData_TEMP1,
                 Files = filesData_TEMP2,
-                OneFile = checkBox_OneFile.Checked
             };
 
             return formatData_RES;
@@ -128,7 +129,6 @@ namespace SecurityFlashDrive
 
             var formatData = dataFile.DataFormat;
             richTextBox_Data.Text = formatData.DataSTR;
-            checkBox_OneFile.Checked = formatData.OneFile;
             filesData = formatData.Files;
 
             #region Parametrs
@@ -136,8 +136,8 @@ namespace SecurityFlashDrive
 
             checkBox_AutoSave.Checked = parametrsData.AutoSave;
             checkBox_AutoBackupSave.Checked = parametrsData.AutoBackupSave;
-            radioButton_Start.Checked = parametrsData.FolderInStartOrEnd;
-            radioButton_End.Checked = !parametrsData.FolderInStartOrEnd;
+            radioButton_Common.Checked = parametrsData.FolderInStartOrEnd;
+            radioButton_Separate.Checked = !parametrsData.FolderInStartOrEnd;
             textBox_NameFolder.Text = parametrsData.NameFolder;
             #endregion Parametrs
 

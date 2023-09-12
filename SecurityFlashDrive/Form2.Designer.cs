@@ -1,6 +1,6 @@
 ﻿namespace SecurityFlashDrive
 {
-    partial class DiologForm
+    partial class EditFile_Form
     {
         /// <summary>
         /// Required designer variable.
@@ -43,20 +43,22 @@
             textBox_FromFile = new TextBox();
             button_OpenFromFile = new Button();
             button_OpenInFile = new Button();
-            radioButton_Start = new RadioButton();
-            radioButton_End = new RadioButton();
+            radioButton_Common = new RadioButton();
+            radioButton_Separate = new RadioButton();
             textBox_NameFolder = new TextBox();
             label_FolderIn = new Label();
-            label_NameFolder = new Label();
+            label_NameFile = new Label();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
             button_Save = new Button();
             label_PassWord = new Label();
             textBox_PassWord = new TextBox();
-            checkBox_OneFile = new CheckBox();
             textBox_OneFromFile = new TextBox();
             button_OpenOneFromFile = new Button();
             folderBrowserDialog = new FolderBrowserDialog();
+            label_FileDirectory = new Label();
+            label1 = new Label();
+            textBox1 = new TextBox();
             SuspendLayout();
             // 
             // label_Data
@@ -106,7 +108,7 @@
             // 
             // textBox_InFile
             // 
-            textBox_InFile.Location = new Point(105, 299);
+            textBox_InFile.Location = new Point(105, 266);
             textBox_InFile.Name = "textBox_InFile";
             textBox_InFile.Size = new Size(232, 27);
             textBox_InFile.TabIndex = 8;
@@ -115,9 +117,9 @@
             // button_AddFile
             // 
             button_AddFile.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            button_AddFile.Location = new Point(420, 266);
+            button_AddFile.Location = new Point(420, 267);
             button_AddFile.Name = "button_AddFile";
-            button_AddFile.Size = new Size(89, 90);
+            button_AddFile.Size = new Size(89, 152);
             button_AddFile.TabIndex = 9;
             button_AddFile.Text = "Add file";
             button_AddFile.UseVisualStyleBackColor = true;
@@ -144,7 +146,7 @@
             // checkBox_AutoBackupSave
             // 
             checkBox_AutoBackupSave.AutoSize = true;
-            checkBox_AutoBackupSave.Location = new Point(285, 72);
+            checkBox_AutoBackupSave.Location = new Point(285, 78);
             checkBox_AutoBackupSave.Name = "checkBox_AutoBackupSave";
             checkBox_AutoBackupSave.Size = new Size(150, 24);
             checkBox_AutoBackupSave.TabIndex = 12;
@@ -154,7 +156,7 @@
             // label_InDisk
             // 
             label_InDisk.AutoSize = true;
-            label_InDisk.Location = new Point(16, 306);
+            label_InDisk.Location = new Point(16, 273);
             label_InDisk.Name = "label_InDisk";
             label_InDisk.Size = new Size(71, 20);
             label_InDisk.TabIndex = 13;
@@ -163,7 +165,7 @@
             // label_FromFile
             // 
             label_FromFile.AutoSize = true;
-            label_FromFile.Location = new Point(14, 269);
+            label_FromFile.Location = new Point(16, 302);
             label_FromFile.Name = "label_FromFile";
             label_FromFile.Size = new Size(46, 20);
             label_FromFile.TabIndex = 15;
@@ -171,15 +173,15 @@
             // 
             // textBox_FromFile
             // 
-            textBox_FromFile.Location = new Point(66, 266);
+            textBox_FromFile.Location = new Point(105, 299);
             textBox_FromFile.Name = "textBox_FromFile";
-            textBox_FromFile.Size = new Size(271, 27);
+            textBox_FromFile.Size = new Size(232, 27);
             textBox_FromFile.TabIndex = 14;
             textBox_FromFile.Text = "File";
             // 
             // button_OpenFromFile
             // 
-            button_OpenFromFile.Location = new Point(343, 266);
+            button_OpenFromFile.Location = new Point(343, 299);
             button_OpenFromFile.Name = "button_OpenFromFile";
             button_OpenFromFile.Size = new Size(71, 27);
             button_OpenFromFile.TabIndex = 16;
@@ -189,7 +191,7 @@
             // 
             // button_OpenInFile
             // 
-            button_OpenInFile.Location = new Point(343, 299);
+            button_OpenInFile.Location = new Point(343, 266);
             button_OpenInFile.Name = "button_OpenInFile";
             button_OpenInFile.Size = new Size(71, 27);
             button_OpenInFile.TabIndex = 17;
@@ -197,52 +199,52 @@
             button_OpenInFile.UseVisualStyleBackColor = true;
             button_OpenInFile.Click += button_OpenInFile_Click;
             // 
-            // radioButton_Start
+            // radioButton_Common
             // 
-            radioButton_Start.AutoSize = true;
-            radioButton_Start.Location = new Point(387, 105);
-            radioButton_Start.Name = "radioButton_Start";
-            radioButton_Start.Size = new Size(61, 24);
-            radioButton_Start.TabIndex = 18;
-            radioButton_Start.TabStop = true;
-            radioButton_Start.Text = "Start";
-            radioButton_Start.UseVisualStyleBackColor = true;
+            radioButton_Common.AutoSize = true;
+            radioButton_Common.Location = new Point(105, 362);
+            radioButton_Common.Name = "radioButton_Common";
+            radioButton_Common.Size = new Size(91, 24);
+            radioButton_Common.TabIndex = 18;
+            radioButton_Common.TabStop = true;
+            radioButton_Common.Text = "Common";
+            radioButton_Common.UseVisualStyleBackColor = true;
             // 
-            // radioButton_End
+            // radioButton_Separate
             // 
-            radioButton_End.AutoSize = true;
-            radioButton_End.Location = new Point(454, 105);
-            radioButton_End.Name = "radioButton_End";
-            radioButton_End.Size = new Size(55, 24);
-            radioButton_End.TabIndex = 19;
-            radioButton_End.TabStop = true;
-            radioButton_End.Text = "End";
-            radioButton_End.UseVisualStyleBackColor = true;
+            radioButton_Separate.AutoSize = true;
+            radioButton_Separate.Location = new Point(202, 364);
+            radioButton_Separate.Name = "radioButton_Separate";
+            radioButton_Separate.Size = new Size(89, 24);
+            radioButton_Separate.TabIndex = 19;
+            radioButton_Separate.TabStop = true;
+            radioButton_Separate.Text = "Separate";
+            radioButton_Separate.UseVisualStyleBackColor = true;
             // 
             // textBox_NameFolder
             // 
-            textBox_NameFolder.Location = new Point(387, 133);
+            textBox_NameFolder.Location = new Point(105, 332);
             textBox_NameFolder.Name = "textBox_NameFolder";
-            textBox_NameFolder.Size = new Size(122, 27);
+            textBox_NameFolder.Size = new Size(232, 27);
             textBox_NameFolder.TabIndex = 20;
             // 
             // label_FolderIn
             // 
             label_FolderIn.AutoSize = true;
-            label_FolderIn.Location = new Point(285, 105);
+            label_FolderIn.Location = new Point(16, 366);
             label_FolderIn.Name = "label_FolderIn";
             label_FolderIn.Size = new Size(70, 20);
             label_FolderIn.TabIndex = 21;
             label_FolderIn.Text = "Folder in:";
             // 
-            // label_NameFolder
+            // label_NameFile
             // 
-            label_NameFolder.AutoSize = true;
-            label_NameFolder.Location = new Point(285, 137);
-            label_NameFolder.Name = "label_NameFolder";
-            label_NameFolder.Size = new Size(96, 20);
-            label_NameFolder.TabIndex = 22;
-            label_NameFolder.Text = "Name folder:";
+            label_NameFile.AutoSize = true;
+            label_NameFile.Location = new Point(16, 335);
+            label_NameFile.Name = "label_NameFile";
+            label_NameFile.Size = new Size(79, 20);
+            label_NameFile.TabIndex = 22;
+            label_NameFile.Text = "Name File:";
             // 
             // openFileDialog
             // 
@@ -251,9 +253,9 @@
             // button_Save
             // 
             button_Save.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            button_Save.Location = new Point(343, 362);
+            button_Save.Location = new Point(348, 477);
             button_Save.Name = "button_Save";
-            button_Save.Size = new Size(166, 50);
+            button_Save.Size = new Size(166, 60);
             button_Save.TabIndex = 23;
             button_Save.Text = "Save";
             button_Save.UseVisualStyleBackColor = true;
@@ -262,7 +264,7 @@
             // label_PassWord
             // 
             label_PassWord.AutoSize = true;
-            label_PassWord.Location = new Point(14, 362);
+            label_PassWord.Location = new Point(17, 513);
             label_PassWord.Name = "label_PassWord";
             label_PassWord.Size = new Size(75, 20);
             label_PassWord.TabIndex = 25;
@@ -270,33 +272,23 @@
             // 
             // textBox_PassWord
             // 
-            textBox_PassWord.Location = new Point(12, 385);
+            textBox_PassWord.Location = new Point(119, 510);
             textBox_PassWord.Name = "textBox_PassWord";
-            textBox_PassWord.Size = new Size(325, 27);
+            textBox_PassWord.Size = new Size(223, 27);
             textBox_PassWord.TabIndex = 24;
             textBox_PassWord.TextChanged += textBox_PassWord_TextChanged;
             // 
-            // checkBox_OneFile
-            // 
-            checkBox_OneFile.AutoSize = true;
-            checkBox_OneFile.Location = new Point(16, 335);
-            checkBox_OneFile.Name = "checkBox_OneFile";
-            checkBox_OneFile.Size = new Size(85, 24);
-            checkBox_OneFile.TabIndex = 26;
-            checkBox_OneFile.Text = "One File";
-            checkBox_OneFile.UseVisualStyleBackColor = true;
-            // 
             // textBox_OneFromFile
             // 
-            textBox_OneFromFile.Location = new Point(105, 333);
+            textBox_OneFromFile.Location = new Point(119, 477);
             textBox_OneFromFile.Name = "textBox_OneFromFile";
-            textBox_OneFromFile.Size = new Size(232, 27);
+            textBox_OneFromFile.Size = new Size(146, 27);
             textBox_OneFromFile.TabIndex = 27;
             textBox_OneFromFile.Text = "Directory";
             // 
             // button_OpenOneFromFile
             // 
-            button_OpenOneFromFile.Location = new Point(343, 332);
+            button_OpenOneFromFile.Location = new Point(271, 477);
             button_OpenOneFromFile.Name = "button_OpenOneFromFile";
             button_OpenOneFromFile.Size = new Size(71, 27);
             button_OpenOneFromFile.TabIndex = 28;
@@ -304,22 +296,49 @@
             button_OpenOneFromFile.UseVisualStyleBackColor = true;
             button_OpenOneFromFile.Click += button_OpenOneFromFile_Click;
             // 
-            // DiologForm
+            // label_FileDirectory
+            // 
+            label_FileDirectory.AutoSize = true;
+            label_FileDirectory.Location = new Point(17, 480);
+            label_FileDirectory.Name = "label_FileDirectory";
+            label_FileDirectory.Size = new Size(96, 20);
+            label_FileDirectory.TabIndex = 29;
+            label_FileDirectory.Text = "FileDirectory:";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(16, 395);
+            label1.Name = "label1";
+            label1.Size = new Size(75, 20);
+            label1.TabIndex = 31;
+            label1.Text = "PassWord:";
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(114, 392);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(223, 27);
+            textBox1.TabIndex = 30;
+            // 
+            // EditFile_Form
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(526, 430);
+            ClientSize = new Size(526, 549);
+            Controls.Add(label1);
+            Controls.Add(textBox1);
+            Controls.Add(label_FileDirectory);
             Controls.Add(button_OpenOneFromFile);
             Controls.Add(textBox_OneFromFile);
-            Controls.Add(checkBox_OneFile);
             Controls.Add(label_PassWord);
             Controls.Add(textBox_PassWord);
             Controls.Add(button_Save);
-            Controls.Add(label_NameFolder);
+            Controls.Add(label_NameFile);
             Controls.Add(label_FolderIn);
             Controls.Add(textBox_NameFolder);
-            Controls.Add(radioButton_End);
-            Controls.Add(radioButton_Start);
+            Controls.Add(radioButton_Separate);
+            Controls.Add(radioButton_Common);
             Controls.Add(button_OpenInFile);
             Controls.Add(button_OpenFromFile);
             Controls.Add(label_FromFile);
@@ -335,7 +354,7 @@
             Controls.Add(label_Files);
             Controls.Add(richTextBox_Data);
             Controls.Add(label_Data);
-            Name = "DiologForm";
+            Name = "EditFile_Form";
             Text = "Form2";
             ResumeLayout(false);
             PerformLayout();
@@ -358,19 +377,21 @@
         private TextBox textBox_FromFile;
         private Button button_OpenFromFile;
         private Button button_OpenInFile;
-        private RadioButton radioButton_Start;
-        private RadioButton radioButton_End;
+        private RadioButton radioButton_Common;
+        private RadioButton radioButton_Separate;
         private TextBox textBox_NameFolder;
         private Label label_FolderIn;
-        private Label label_NameFolder;
+        private Label label_NameFile;
         private OpenFileDialog openFileDialog;
         private SaveFileDialog saveFileDialog;
         private Button button_Save;
         private Label label_PassWord;
         private TextBox textBox_PassWord;
-        private CheckBox checkBox_OneFile;
         private TextBox textBox_OneFromFile;
         private Button button_OpenOneFromFile;
         private FolderBrowserDialog folderBrowserDialog;
+        private Label label_FileDirectory;
+        private Label label1;
+        private TextBox textBox1;
     }
 }
