@@ -112,7 +112,7 @@ namespace SecurityFlashDrive
             catch (Exception ex) { Console.WriteLine("ERROR"); }
             return text;
         }
-        static byte[] ComputeSHA256(string s)
+        public static byte[] ComputeSHA256(string s)
         {
             // Инициализировать хеш-объект SHA256
             using (SHA256 sha256 = SHA256.Create())

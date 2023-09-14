@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SecurityFlashDrive.DataFile;
-using static SecurityFlashDrive.FormatData;
+using static SecurityFlashDrive.Devices_File;
+using static SecurityFlashDrive.Devices_FormatData;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SecurityFlashDrive
@@ -78,14 +78,16 @@ namespace SecurityFlashDrive
         }
         private void button_AddFile_Click(object sender, EventArgs e)
         {
+            /*
             var valid_From = DataPath.NewDataPath(textBox_FromFile.Text);
             var valid_In = DataPath.NewDataPath(textBox_InFile.Text);
-            if (filesData == null) filesData = new List<FilesData>();
+            if (filesData == null) filesData = new List<UserFile>();
             if (valid_From.Item1 && valid_In.Item1)
-                filesData.Add(new FilesData { PathFromFile = valid_From.Item2, PathInFile = valid_In.Item2 });
+                filesData.Add(new UserFile { PathFromFile = valid_From.Item2, PathInFile = valid_In.Item2 });
             else
                 MessageBox.Show($"Путь указан не верно!");
             listBox_Files_UpdateData();
+            */
         }
         #endregion Button
 
@@ -95,22 +97,24 @@ namespace SecurityFlashDrive
 
 
         #region WorkCodThisForm
-        private ActionsDataFile curentActionsDataFile;
-        List<FormatData.FilesData> filesData = new List<FormatData.FilesData>();
-        private FormatData CollectDataFromForm()
+        private Devices_ActionsFile curentActionsDataFile;
+        List<Devices_FormatData.UserFile> filesData = new List<Devices_FormatData.UserFile>();
+        private Devices_FormatData CollectDataFromForm()
         {
             var parametrsData_TEMP1 = new ParametrsData
             {
+                /*
                 AutoSave = checkBox_AutoSave.Checked,
                 AutoBackupSave = checkBox_AutoBackupSave.Checked,
                 FolderInStartOrEnd = radioButton_Common.Checked,
                 NameFolder = textBox_NameFolder.Text,
+                */
             };
 
 
             var filesData_TEMP2 = filesData;
 
-            var formatData_RES = new FormatData
+            var formatData_RES = new Devices_FormatData
             {
                 DataSTR = richTextBox_Data.Text,
                 Parametrs = parametrsData_TEMP1,
@@ -119,8 +123,9 @@ namespace SecurityFlashDrive
 
             return formatData_RES;
         }
-        private void UpdateData(DataFile dataFile)
+        private void UpdateData(Devices_File dataFile)
         {
+            /*
             disk = dataFile.Path.NameDisk;
             label_InDisk.Text = $"IN (disk {disk}):";
             textBox_PassWord.Text = dataFile.PassWord;
@@ -140,7 +145,7 @@ namespace SecurityFlashDrive
             radioButton_Separate.Checked = !parametrsData.FolderInStartOrEnd;
             textBox_NameFolder.Text = parametrsData.NameFolder;
             #endregion Parametrs
-
+            */
             listBox_Files_UpdateData();
             /*
             DataFileForm dataFileForm = new DataFileForm(dataFile.Data);
@@ -156,7 +161,7 @@ namespace SecurityFlashDrive
         }
         #endregion WorkCodThisForm
 
-        public void ShowFormCurrentData(ActionsDataFile actionsDataFile)
+        public void ShowFormCurrentData(Devices_ActionsFile actionsDataFile)
         {
             curentActionsDataFile = actionsDataFile;
             curentActionsDataFile.DownloadData();

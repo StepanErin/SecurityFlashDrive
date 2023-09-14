@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace SecurityFlashDrive
 {
     /// <summary>
-    /// Данные файла
+    /// Файла устройства
     /// </summary>
-    public class DataFile
+    public class Devices_File
     {
         public DataPath Path { get; }
 
@@ -22,7 +22,7 @@ namespace SecurityFlashDrive
         /// <param name="path">путь до файла</param>
         /// <param name="name">имя файла</param>
         /// <param name="passWord">пароль</param>
-        public DataFile(DataPath dataPath, string passWord)
+        public Devices_File(DataPath dataPath, string passWord)
         {
             Path = dataPath;
             PassWord = passWord;
@@ -38,16 +38,16 @@ namespace SecurityFlashDrive
 
 
         #region Serialization
-        public FormatData DataFormat { get; private protected set; } = new FormatData();
+        public Devices_FormatData DataFormat { get; private protected set; } = new Devices_FormatData();
         public byte[] DataBytes
         {
             get
             {
-                return Serialization.StartSerialize<FormatData>(DataFormat).Item2;
+                return Serialization.StartSerialize<Devices_FormatData>(DataFormat).Item2;
             }
             private protected set
             {
-                DataFormat = Serialization.StartDeserialize<FormatData>(value).Item2;
+                DataFormat = Serialization.StartDeserialize<Devices_FormatData>(value).Item2;
             }
         }
         #endregion Serialization

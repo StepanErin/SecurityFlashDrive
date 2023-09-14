@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,50 +56,34 @@ namespace SecurityFlashDrive
         private void FlashDriveDetection(object sender, EventArrivedEventArgs e)
         {
             var info = UpdateConnectedDevices();
-            (char, string) curentDrive = ('_', "");
             var driveName = e.NewEvent.Properties["DriveName"].Value.ToString()[0];
-            foreach (var item in info)
-            {
-                if (item.Item1 == driveName)
-                {
-                    curentDrive = item;
-                    break;
-                }
-            }
-            NewCurentDrive?.Invoke(curentDrive.Item1, curentDrive.Item2);
+            if (info.ContainsKey(driveName))
+                NewCurentDrive?.Invoke(driveName, info[driveName]);
         }
         private void FlashDriveOFFDetection(object sender, EventArrivedEventArgs e)
         {
-            var info = ConnectedDevices_OLD;
-            (char, string) curentDrive = ('_', "");
             var driveName = e.NewEvent.Properties["DriveName"].Value.ToString()[0];
-            foreach (var item in info)
-            {
-                if (item.Item1 == driveName)
-                {
-                    curentDrive = item;
-                    break;
-                }
-            }
-            OffCurentDrive?.Invoke(curentDrive.Item1, curentDrive.Item2);
+            if (ConnectedDevices_OLD.ContainsKey(driveName))
+                OffCurentDrive?.Invoke(driveName, ConnectedDevices_OLD[driveName]);
         }
         static public DriveInfo[] GetAllDrives()
         {
             return DriveInfo.GetDrives();
         }
-        private (char, string)[] ConnectedDevices_OLD;
-        private (char, string)[] UpdateConnectedDevices()
+        private Dictionary<char, string> ConnectedDevices_OLD = new Dictionary<char, string>();
+        private Dictionary<char, string> UpdateConnectedDevices()
         {
             try
             {
-                var temp = new List<(char, string)>();
-                foreach (var item in DriveInfo.GetDrives()) temp.Add((item.Name[0], item.VolumeLabel));
-                ConnectedDevices_OLD = temp.ToArray();
+                ConnectedDevices_OLD.Clear();
+                foreach (var item in DriveInfo.GetDrives())
+                    ConnectedDevices_OLD.Add(item.Name[0], item.VolumeLabel);
                 return ConnectedDevices_OLD;
             }
             catch (Exception ex)
             {
-                return new(char, string)[] { ('-', ex.Message) };
+                MessageBox.Show(ex.Message);
+                return new Dictionary<char, string>();
             }
         }
     }

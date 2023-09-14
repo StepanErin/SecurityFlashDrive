@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace SecurityFlashDrive
 {
+    /// <summary>
+    /// Работа с файлами
+    /// </summary>
     internal static class FileIO
     {
+        /// <summary>
+        /// Создать путь
+        /// </summary>
+        /// <param name="path"></param>
         public static void DirectoryCreate(string path)
         {
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);

@@ -14,15 +14,24 @@ namespace SecurityFlashDrive
         
         public delegate void ClickButton(TypeEvent typeEvent);
 
+        /// <summary>
+        /// Типы кнопок
+        /// </summary>
         public enum TypeEvent
         {
             Show,
             Close
         }
+        /// <summary>
+        /// Создать кнопки
+        /// </summary>
+        /// <param name="click">Событие нажатия</param>
+        /// <param name="types">Типы кнопок</param>
         public IconTreyControl(ClickButton click, TypeEvent[] types)
         {
-            icon.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+            icon.Icon = Icon.ExtractAssociatedIcon("C:\\Users\\ПК\\Desktop 2\\qwerty.bmp"); //Application.ExecutablePath);
             icon.ContextMenuStrip = new ContextMenuStrip();
+
 
             foreach (TypeEvent typeEvent in types) new Button(ref icon, typeEvent, click);
 

@@ -9,14 +9,14 @@ namespace SecurityFlashDrive
     /// <summary>
     /// Действия с файлом
     /// </summary>
-    public class ActionsDataFile : DataFile
+    public class Devices_ActionsFile : Devices_File
     {
         #region Constructors
         /// <summary>
         /// Реализация класса ActionsDataFile
         /// </summary>
         /// <param name="dataFile">Данные файла</param>
-        public ActionsDataFile(DataFile dataFile)
+        public Devices_ActionsFile(Devices_File dataFile)
         : base(dataFile.Path, dataFile.PassWord) { }
         /// <summary>
         /// Реализация класса ActionsDataFile
@@ -26,14 +26,14 @@ namespace SecurityFlashDrive
         /// <param name="name">Имя файла</param>
         /// <param name="extension">Разширение файла</param>
         /// <param name="passWord">Пароль</param>
-        public ActionsDataFile(char nameDisk, string path, string name, string extension, string passWord)
+        public Devices_ActionsFile(char nameDisk, string path, string name, string extension, string passWord)
         : base(new DataPath(nameDisk, path, name, extension), passWord) { }
         /// <summary>
         /// Реализация класса ActionsDataFile
         /// </summary>
         /// <param name="dataPath">Путь</param>
         /// <param name="passWord">Пароль</param>
-        public ActionsDataFile(DataPath dataPath, string passWord)
+        public Devices_ActionsFile(DataPath dataPath, string passWord)
         : base(dataPath, passWord) { }
         #endregion Constructors
 
@@ -44,7 +44,7 @@ namespace SecurityFlashDrive
         /// </summary>
         /// <param name="data">Данные</param>
         /// <returns>Успешность выполнения</returns>
-        public bool SaveData(FormatData data)
+        public bool SaveData(Devices_FormatData data)
         {
             if (!FileExists()) Directory.CreateDirectory(Path.DirectoryPath);
             DataFormat = data;

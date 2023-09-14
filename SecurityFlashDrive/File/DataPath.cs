@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using System.Xml.Linq;
 
 namespace SecurityFlashDrive
 {
+    [Serializable]
     public struct DataPath
     {
         /// <summary>
@@ -51,6 +53,11 @@ namespace SecurityFlashDrive
             Name = name;
             Extension = extension;
         }
+        /// <summary>
+        /// преобразование строки в путь с подтверждением
+        /// </summary>
+        /// <param name="path">путь</param>
+        /// <returns>(Подтверждение, Путь)</returns>
         static public (bool, DataPath) NewDataPath(string path)
         {
             char disk;
@@ -70,10 +77,14 @@ namespace SecurityFlashDrive
             string fullName = t[t.Length - 1];
             if (fullName.Contains('.'))
             {
-                var n = fullName.Split('.');
-                if (n.Length > 2) return (false, new DataPath());//название и расширение
-                nameFile = n[0];
-                extensionFile = n[1];
+                int n = fullName.LastIndexOf('.');
+                nameFile = fullName.Remove(n);
+                extensionFile = fullName.Remove(0, n + 1);
+                /*
+                var n_ = fullName.Split('.');
+                if (n_.Length > 2) return (false, new DataPath());//название и расширение
+                nameFile = n_[0];
+                extensionFile = n_[1];*/
             }
             else
             {
@@ -84,9 +95,27 @@ namespace SecurityFlashDrive
             if (t.Length > 2)
             {
                 path_ += t[1];
-                for (int i = 2; i < t.Length - 2; i++) path_ += t[i];
+                for (int i = 2; i < t.Length - 2; i++) path_ += '\\' + t[i];
             }
             return (true, new DataPath(disk, path_, nameFile, extensionFile));
+        }
+        static public (bool, DataPath) NewDataDirectory(string directory)
+        {
+            char disk;
+            string path_ = "";
+            var t = directory.Split('\\');
+
+
+            if (t[0].Length != 2) return (false, new DataPath());//наличие диска
+            disk = t[0][0];
+
+
+            if (t.Length > 1)
+            {
+                path_ += t[1];
+                for (int i = 2; i < t.Length - 2; i++) path_ += '\\' + t[i];
+            }
+            return (true, new DataPath(disk, path_, "", ""));
         }
         public override string ToString()
         {

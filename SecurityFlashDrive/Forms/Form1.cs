@@ -111,14 +111,14 @@ namespace SecurityFlashDrive
         private void button_SelectionConfirmation_Click(object sender, EventArgs e)
         {
             var passWord = "0";
-            ActionsDataFile file = new ActionsDataFile(curentDeviceName, "PrivateData", "Log", "txt", passWord);
-            editFile_Form.ShowFormCurrentData(file);
-            editFile_Form2.ShowFormCurrentData(file);
+            Devices_ActionsFile file = new Devices_ActionsFile(curentDeviceName, "PrivateData", "Log", "txt", passWord);
+            //editFile_Form.ShowFormCurrentData(file);
+            editFile_Form2.ShowForm(file);
         }
         private void button_Run_Click(object sender, EventArgs e)
         {
             var passWord = "0";
-            ActionsDataFile file = new ActionsDataFile(curentDeviceName, "PrivateData", "Log", "txt", passWord);
+            Devices_ActionsFile file = new Devices_ActionsFile(curentDeviceName, "PrivateData", "Log", "txt", passWord);
             backup.RunFile(file);
         }
         private void button_Add_Click(object sender, EventArgs e)
@@ -259,8 +259,9 @@ namespace SecurityFlashDrive
                 if (InvokeRequired) Invoke(action);
                 else action();
             }
-            catch
+            catch(Exception ex)
             {
+                MessageBox.Show("!!!ERROR!!!:" + ex.Message, "error");
             }
         }
         private void SelectedDisk(int i)
@@ -303,7 +304,7 @@ namespace SecurityFlashDrive
             if (paramDataForm.Devises.Contains(deviceData.GetDataDevices(nameDisk)))
             {
                 var passWord = "0";
-                ActionsDataFile file = new ActionsDataFile(nameDisk, "PrivateData", "Log", "txt", passWord);
+                Devices_ActionsFile file = new Devices_ActionsFile(nameDisk, "PrivateData", "Log", "txt", passWord);
                 backup.RunFile(file);
             }
             else
